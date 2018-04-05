@@ -6,5 +6,5 @@ COPY . /python_rest
 WORKDIR /python_rest
 RUN pip3 install --upgrade pip
 RUN pip install -r requirements.txt
-#ENTRYPOINT ["python3"]
-#CMD ["server.py"]
+ENTRYPOINT ["python3"]
+CMD ["server.py"]
