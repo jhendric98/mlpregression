@@ -9,6 +9,8 @@ import numpy as np
 
 app = Flask(__name__)
 
+model = def_model()
+model.load_weights("model.h5")
 
 @app.route('/')
 def hello_world():
@@ -17,6 +19,7 @@ def hello_world():
 
 @app.route('/api', methods=['POST'])
 def api():
+    global model
     if not request.is_json:
         output = request.form['input'].strip()
 
@@ -25,12 +28,11 @@ def api():
         output = req_data['input'].strip()
 
     clean = np.array(output.split(",")).reshape(1, 13)
-    model = def_model()
-    model.load_weights("model.h5")
+
     result = model.predict(clean)
 
     return str(result.item(0))
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5002)
