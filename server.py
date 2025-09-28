@@ -17,6 +17,11 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 app = Flask(__name__)
+# Limit request bodies to a small size to reduce the risk of denial-of-service
+# attacks that attempt to stream arbitrarily large payloads to the API. The
+# model only needs 13 floating point features, so a 16 KiB ceiling is more than
+# sufficient for legitimate requests.
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
 MODEL_FEATURES = 13
 
 
@@ -53,6 +58,10 @@ def _coerce_payload(payload: Any) -> np.ndarray:
             values.append(float(item))
         except (TypeError, ValueError) as exc:  # pragma: no cover - defensive
             raise BadRequest(f"Feature at position {index} must be numeric.") from exc
+        if len(values) > MODEL_FEATURES:
+            raise BadRequest(
+                f"Exactly {MODEL_FEATURES} features are required, received more than {MODEL_FEATURES}."
+            )
 
     if len(values) != MODEL_FEATURES:
         raise BadRequest(
@@ -81,7 +90,11 @@ def api() -> dict[str, float]:
     """Return the model prediction for the provided feature vector."""
 
     if request.is_json:
-        req_data = request.get_json(silent=True) or {}
+        req_data = request.get_json(silent=True)
+        if req_data is None:
+            raise BadRequest("Request body contained invalid JSON.")
+        if not isinstance(req_data, Mapping):
+            raise BadRequest("JSON payload must be an object with an 'input' field.")
         payload = req_data.get("input")
     else:
         payload = request.form.get("input")
