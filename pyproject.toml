@@ -1,0 +1,23 @@
+[project]
+name = "mlpregression"
+version = "0.1.0"
+description = "Flask service that serves predictions from a pre-trained MLP regression model."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Jim Hendricks" }]
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.0.3",
+    "numpy>=1.26.4",
+    "tensorflow-cpu>=2.15,<2.17",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+dev-dependencies = [
+    "black>=24.4.2",
+    "ruff>=0.4.8",
+]
