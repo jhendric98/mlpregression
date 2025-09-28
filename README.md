@@ -40,6 +40,11 @@ and save the weights again using `model.save_weights("model.h5")`.
 - [uv](https://docs.astral.sh/uv/latest/) for managing dependencies. uv is a
   drop-in replacement for `pip` and `virtualenv` that provides reproducible
   environments.
+  - macOS / Linux: `curl -Ls https://astral.sh/uv/install.sh | sh`
+  - Windows (PowerShell):
+    ```powershell
+    iwr https://astral.sh/uv/install.ps1 -useb | iex
+    ```
 - (Optional) Docker if you plan to containerise the service.
 
 ## Installation and local development
@@ -51,8 +56,14 @@ virtual environment managed by uv:
 uv sync
 ```
 
-This command reads `pyproject.toml`, creates the virtual environment, and
+The command reads `pyproject.toml`, creates the virtual environment, and
 installs TensorFlow, Flask, and the other dependencies required by the service.
+If you would like to run the exploratory notebook, include its optional
+dependencies by syncing with the `notebook` extra:
+
+```bash
+uv sync --extra notebook
+```
 
 Start the development server with:
 

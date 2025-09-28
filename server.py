@@ -91,7 +91,9 @@ def _coerce_payload(payload: Any) -> np.ndarray:
     elif isinstance(payload, Iterable) and not isinstance(payload, Mapping):
         tokens = payload
     else:
-        raise BadRequest("Input must be a comma separated string or iterable of values.")
+        raise BadRequest(
+            "Input must be a comma separated string or iterable of values."
+        )
 
     values = []
     for index, item in enumerate(tokens):
