@@ -1,4 +1,10 @@
-"""Model definition utilities for the regression service."""
+"""Utility helpers for constructing the regression model architecture.
+
+The `server.py` module and accompanying notebook import :func:`def_model` to
+instantiate a TensorFlow/Keras ``Sequential`` model. Keeping the architecture in
+one place ensures the saved weights in ``model.h5`` always align with the
+in-memory model used by the Flask API.
+"""
 
 from __future__ import annotations
 
@@ -6,7 +12,15 @@ from tensorflow import keras
 
 
 def def_model() -> keras.Model:
-    """Create the regression model architecture used by the API."""
+    """Build and compile the MLP regressor used throughout the project.
+
+    Returns
+    -------
+    keras.Model
+        A ``Sequential`` model with two hidden dense layers (50 and 10 units) and
+        a single linear output neuron. The model is compiled with mean squared
+        error as both the loss function and metric, and uses the Adam optimiser.
+    """
 
     model = keras.Sequential()
     model.add(
