@@ -1,10 +1,22 @@
-FROM ubuntu:latest
-MAINTAINER Jim Hendricks "jhendric98@gmail.com"
-RUN apt-get update -y
-RUN apt-get install -y python3-pip python3-dev build-essential sqlite
-COPY . /python_rest
-WORKDIR /python_rest
-RUN pip3 install --upgrade pip
-RUN pip install -r requirements.txt
-ENTRYPOINT ["python3"]
-CMD ["server.py"]
+FROM python:3.11-slim
+
+ENV UV_INSTALL_DIR=/usr/local
+ENV PATH="${UV_INSTALL_DIR}/bin:/app/.venv/bin:${PATH}"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh -s -- --bindir ${UV_INSTALL_DIR}/bin
+
+WORKDIR /app
+
+COPY pyproject.toml ./
+
+RUN uv sync --no-dev
+
+COPY . .
+
+EXPOSE 5002
+
+CMD ["python", "server.py"]
