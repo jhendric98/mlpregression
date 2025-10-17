@@ -1,0 +1,153 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mlpregression"
+version = "2.1.0"
+description = "MLP regression model for Boston housing price prediction"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = {text = "MIT"}
+authors = [
+    {name = "Jim Hendricks", email = "jhendric98@gmail.com"}
+]
+keywords = ["machine-learning", "neural-network", "regression", "boston-housing", "mlp", "tensorflow", "keras"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "tensorflow>=2.15.0,<2.19.0",
+    "numpy>=1.24.0,<2.0.0",
+    "pandas>=2.0.0,<3.0.0",
+    "h5py>=3.10.0,<4.0.0",
+    "Flask>=3.0.0,<4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0,<8.0.0",
+    "pytest-cov>=4.1.0,<5.0.0",
+    "pytest-flask>=1.3.0,<2.0.0",
+    "black>=23.0.0,<24.0.0",
+    "isort>=5.12.0,<6.0.0",
+    "flake8>=6.1.0,<7.0.0",
+    "mypy>=1.5.0,<2.0.0",
+    "build>=1.0.0,<2.0.0",
+    "twine>=4.0.0,<5.0.0",
+]
+plotting = [
+    "matplotlib>=3.7.0,<4.0.0",
+    "scipy>=1.11.0,<2.0.0",
+]
+docs = [
+    "sphinx>=7.0.0,<8.0.0",
+    "sphinx-rtd-theme>=1.3.0,<2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/jimhendricks/mlpregression"
+Repository = "https://github.com/jimhendricks/mlpregression"
+Issues = "https://github.com/jimhendricks/mlpregression/issues"
+Documentation = "https://github.com/jimhendricks/mlpregression/blob/main/README.md"
+
+[project.scripts]
+mlpregression-server = "mlpregression.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mlpregression"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/mlpregression",
+    "/tests",
+    "/examples",
+    "/docs",
+    "/models",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.0,<8.0.0",
+    "pytest-cov>=4.1.0,<5.0.0",
+    "pytest-flask>=1.3.0,<2.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0,<2.0.0",
+    "build>=1.0.0,<2.0.0",
+    "twine>=4.0.0,<5.0.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --cov=mlpregression --cov-report=term-missing --cov-report=html"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["mlpregression"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
